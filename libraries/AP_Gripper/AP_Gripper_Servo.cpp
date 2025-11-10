@@ -68,6 +68,32 @@ void AP_Gripper_Servo::release()
     LOGGER_WRITE_EVENT(LogEvent::GRIPPER_RELEASE);
 }
 
+void AP_Gripper_Servo::stop()
+{
+
+    // check if the servo is already stopping
+    if (config.state == AP_Gripper::STATE_STOPPING) {
+        // do nothing
+        return;
+    }
+
+    // check if the servo is already in neutral/stop state
+    if (config.state == AP_Gripper::STATE_NEUTRAL) {
+        // inform user that we are already in stop state
+        GCS_SEND_TEXT(MAV_SEVERITY_INFO, "Gripper stopped");
+        return;
+    }
+
+    // flag the servo to neutral/stop state
+    config.state = AP_Gripper::STATE_STOPPING;
+
+    // move the servo to the neutral state
+    SRV_Channels::set_output_pwm(SRV_Channel::k_gripper, config.neutral_pwm);
+    GCS_SEND_TEXT(MAV_SEVERITY_INFO, "Gripper Stopping");
+    LOGGER_WRITE_EVENT(LogEvent::GRIPPER_STOP);
+    
+}
+
 bool AP_Gripper_Servo::has_state_pwm(const uint16_t pwm) const
 {
     // return true if servo is in position represented by pwm
@@ -108,7 +134,10 @@ void AP_Gripper_Servo::update_gripper()
     } else if (config.state == AP_Gripper::STATE_RELEASING && has_state_pwm(config.release_pwm)) {
         config.state = AP_Gripper::STATE_RELEASED;
         GCS_SEND_TEXT(MAV_SEVERITY_INFO, "Gripper load released");
-    }
+    } else if (config.state == AP_Gripper::STATE_STOPPING && has_state_pwm(config.neutral_pwm)) {
+        config.state = AP_Gripper::STATE_NEUTRAL;
+        GCS_SEND_TEXT(MAV_SEVERITY_INFO, "Gripper Stopped");
+    } 
 }
 
 bool AP_Gripper_Servo::valid() const

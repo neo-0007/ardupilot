@@ -42,6 +42,9 @@ public:
     // grab - move the servo to the grab position
     void grab();
 
+    // stop - move the servo to neutral/stop position
+    void stop();
+
     // release - move the servo output to the release position
     void release();
 
@@ -64,6 +67,7 @@ public:
 
     typedef enum {
         STATE_NEUTRAL,
+        STATE_STOPPING,
         STATE_GRABBING,
         STATE_RELEASING,
         STATE_GRABBED,

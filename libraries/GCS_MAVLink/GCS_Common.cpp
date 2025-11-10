@@ -5131,7 +5131,7 @@ MAV_RESULT GCS_MAVLINK::handle_command_do_gripper(const mavlink_command_int_t &p
     AP_Gripper &gripper = AP::gripper();
 
     // param1 : gripper number (ignored)
-    // param2 : action (0=release, 1=grab). See GRIPPER_ACTIONS enum.
+    // param2 : action (0=release, 1=grab, 2=stop/neutral). See GRIPPER_ACTIONS enum.
     if(!gripper.enabled()) {
         return MAV_RESULT_FAILED;
     }
@@ -5139,11 +5139,14 @@ MAV_RESULT GCS_MAVLINK::handle_command_do_gripper(const mavlink_command_int_t &p
     MAV_RESULT result = MAV_RESULT_ACCEPTED;
 
     switch ((uint8_t)packet.param2) {
-    case GRIPPER_ACTION_RELEASE:
+    case GRIPPER_ACTION_OPEN:
         gripper.release();
         break;
-    case GRIPPER_ACTION_GRAB:
+    case GRIPPER_ACTION_CLOSE:
         gripper.grab();
+        break;
+    case GRIPPER_ACTION_STOP:
+        gripper.stop();
         break;
     default:
         result = MAV_RESULT_FAILED;

@@ -94,6 +94,20 @@ void AP_Gripper_EPM::release()
 }
 
 // neutral - return the epm pwm output to the neutral position
+void AP_Gripper_EPM::stop()
+{
+    // flag we are setting servo to stop state
+    config.state = AP_Gripper::STATE_STOPPING;
+
+    if (!should_use_uavcan()) {
+        SRV_Channels::set_output_pwm(SRV_Channel::k_gripper, config.neutral_pwm);
+    }
+
+    GCS_SEND_TEXT(MAV_SEVERITY_INFO, "Gripper stopping");
+    LOGGER_WRITE_EVENT(LogEvent::GRIPPER_STOP);
+}
+
+// neutral - return the epm pwm output to the neutral position
 void AP_Gripper_EPM::neutral()
 {
     if (!should_use_uavcan()) {

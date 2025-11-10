@@ -36,6 +36,9 @@ public:
     // release - move the servo output to the release position
     virtual void release() = 0;
 
+    // stop - move the servo to neutral/stop position
+    virtual void stop() = 0;
+
     // valid - returns true if the backend should be working
     virtual bool valid() const { return true; };
 

@@ -44,15 +44,19 @@ bool AP_Mission::start_command_do_gripper(const AP_Mission::Mission_Command& cmd
     // Note: we ignore the gripper num parameter because we only
     // support one gripper
     switch (cmd.content.gripper.action) {
-    case GRIPPER_ACTION_RELEASE:
+    case GRIPPER_ACTION_OPEN:
         gripper.release();
         // Log_Write_Event(DATA_GRIPPER_RELEASE);
         GCS_SEND_TEXT(MAV_SEVERITY_INFO, "Gripper Released");
         return true;
-    case GRIPPER_ACTION_GRAB:
+    case GRIPPER_ACTION_CLOSE:
         gripper.grab();
         // Log_Write_Event(DATA_GRIPPER_GRAB);
         GCS_SEND_TEXT(MAV_SEVERITY_INFO, "Gripper Grabbed");
+        return true;
+    case GRIPPER_ACTION_STOP:
+        gripper.stop();
+        GCS_SEND_TEXT(MAV_SEVERITY_INFO, "Gripper Stopped");
         return true;
     default:
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL

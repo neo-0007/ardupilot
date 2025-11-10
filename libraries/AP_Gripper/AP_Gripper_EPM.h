@@ -36,6 +36,9 @@ public:
     // release - move the EPM pwm output to the release position
     void        release() override;
 
+    // stop - return the EPM pwm output to the neutral/stop position
+    void        stop() override;
+
     // grabbed - returns true if gripper in grabbed state
     bool grabbed() const override;
 

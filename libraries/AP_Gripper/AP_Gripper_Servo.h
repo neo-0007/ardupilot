@@ -33,6 +33,9 @@ public:
     // release - move the servo output to the release position
     void release() override;
 
+    // stop - move the servo to neutral/stop position
+    void stop() override;
+
     // grabbed - returns true if gripper in grabbed state
     bool grabbed() const override;
 
